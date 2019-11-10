@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def read_data(filename):
@@ -9,10 +8,10 @@ def read_data(filename):
     n = int(n)
     m = int(m)
     with open(filename) as file:
-        return read_from_file(file, n, m), n, m
+        return read_from_file(file), n, m
 
 
-def read_from_file(file, n, m):
+def read_from_file(file):
     X = []
     for line in file:
         row = line.split(sep=',')
