@@ -4,20 +4,21 @@ import src.presentation as pres
 import src.data_disturber as dis
 from src.Hopfield import HopfieldNetwork
 
-network_async_mode = False
+network_async_mode = True
 
 print("Reading data file...")
-path = '../data/small-7x7.csv'
+#path = '../data/letters_abc-8x12.csv'
+path = '../data/animals-14x9.csv'
 X, n, m = reader.read_data(path)
 
 print("Displaying file data...")
 pres.print_dataset(X, n, m, path)
 
-curr_image_idx = 2
-curr_image = X[curr_image_idx]
+curr_image_idx = 4
+curr_image = X[curr_image_idx].copy()
 
 print("Disturbing image...")
-test_image = dis.disturb_image(curr_image, 2)
+test_image = dis.disturb_image(curr_image, 10)
 
 print("Creating network...")
 network = HopfieldNetwork(0.04, 1000)
@@ -30,4 +31,7 @@ else:
     pred_image = network.reconstruct_sync(test_image)
 
 print("Displaying predicted image...")
-pres.print_experiment_result(test_image, pred_image, n, m)
+pres.print_experiment_result(X[curr_image_idx], test_image, pred_image, n, m)
+
+print("Displaying construction steps...")
+pres.print_reconstruction_steps(network.previous_steps, n, m)
