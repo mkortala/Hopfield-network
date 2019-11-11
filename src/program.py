@@ -2,7 +2,7 @@ import numpy as np
 import src.reader as reader
 import src.presentation as pres
 import src.data_disturber as dis
-from src.Hopfield import HopfieldNetwork
+from src.Hopfield import HopfieldNetwork, LearningType
 
 network_async_mode = False
 
