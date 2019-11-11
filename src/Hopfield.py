@@ -19,6 +19,8 @@ class HopfieldNetwork:
         self.max_iter = max_iter
         self.learningType = learningType
 
+        self.previous_steps = []
+
     def train(self, X):
         if self.learningType == LearningType.Hebbian:
             self.Weights = self.__hebbianRule(X, X.shape[1], X.shape[0])
@@ -41,30 +43,42 @@ class HopfieldNetwork:
         return self.Weights
 
     def reconstruct_sync(self, x):
-        previous_steps = []
+        x = x.copy()
+        self.previous_steps = [x]
         for i in range(0, self.max_iter):
             new_x = np.dot(self.Weights, x)
             new_x = self.activation(new_x)
-            if (new_x == x).all():
+
+            self.previous_steps.append(new_x)
+            if np.array_equal(new_x, x):
                 return new_x
-            # if previous_steps.__contains__(new_x):
-            #     print("Cycle detected")
-            #     return []
-            previous_steps.append(x)
-            x = new_x
+
+            if any(np.array_equal(v, new_x) for v in self.previous_steps):
+                print("Cycle detected!")
+                return new_x
+
+            x = new_x.copy()
+
+        print("Network did not converge!")
+        return x
 
     def reconstruct_async(self, x):
-        previous_steps = []
-        new_x = x
-        for i in range(0, self.max_iter * len(x)):
-            n = random.randint(0, len(x))
 
-            val = np.dot(new_x, self.Weights[n])
+        self.previous_steps = [x]
+        x = x.copy()
 
-            new_x[n] = self.activation(val)
+        for i in range(0, self.max_iter):
 
-            if (new_x == x).all():
-                return new_x
+            n = int(round(random.uniform(0, len(x) - 1)))
+            val = np.dot(x, self.Weights[n])
 
-            previous_steps.append(new_x)
-            x = new_x
+            x[n] = self.activation(val)
+
+            self.previous_steps.append(x)
+
+            if len(self.previous_steps) > 10 * len(x) and all(np.array_equal(p, x)
+                                                              for p in self.previous_steps[-10 * len(x) :]):
+                return x
+
+        print("Network did not converge!")
+        return x
