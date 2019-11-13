@@ -4,11 +4,11 @@ import src.presentation as pres
 import src.data_disturber as dis
 from src.Hopfield import HopfieldNetwork, LearningType
 
-network_async_mode = False
+network_async_mode = True
 
 print("Reading data file...")
 #path = '../data/letters_abc-8x12.csv'
-path = '../data/small-7x7.csv'
+path = '../data/large-25x25.csv'
 X, n, m = reader.read_data(path)
 
 print("Displaying file data...")
@@ -18,10 +18,10 @@ curr_image_idx = 2
 curr_image = X[curr_image_idx].copy()
 
 print("Disturbing image...")
-test_image = dis.disturb_image(curr_image, 0)
+test_image = dis.disturb_image(curr_image, 3)
 
 print("Creating network...")
-network = HopfieldNetwork(0.001, 1000, LearningType.Ojas, 1e-10)
+network = HopfieldNetwork(0.0001, 100000, LearningType.Ojas, 1e-12)
 network.train(X)
 
 print("Prediction...")
