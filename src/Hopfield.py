@@ -11,13 +11,13 @@ class LearningType(Enum):
 
 class HopfieldNetwork:
 
-    def __init__(self, learning_rate, max_iter, learningType):
+    def __init__(self, learning_rate, max_iter, learning_type, epsilon):
         self.Weights = None
-
         self.activation = lambda x: np.sign(x)
         self.learning_rate = learning_rate
         self.max_iter = max_iter
-        self.learningType = learningType
+        self.learningType = learning_type
+        self.epsilon = epsilon
 
         self.previous_steps = []
 
@@ -32,15 +32,17 @@ class HopfieldNetwork:
         return 1 / N * (dot - M * np.identity(N))
 
     def __ojaRule(self, X, N, M):
-        self.Weights = np.outer(X[0], X[0]) / 1.
-        for i in range(1, len(X)):
-            dot = np.dot(self.Weights,  X[i])
-            V = dot
-            V = self.activation(V)
-            dot2 = self.activation(np.dot(self.Weights, V))
-            diff = (X[i] - dot2)
-            self.Weights += self.learning_rate * np.dot(V, diff)
-        return self.Weights
+        np.random.seed(30)
+        self.Weights = 1/N * np.outer(X[0], X[0])#np.random.randn(N, N)
+
+        Weights_prev = np.zeros((N, N))
+        while np.linalg.norm(self.Weights - Weights_prev) > self.epsilon:
+            Weights_prev = self.Weights.copy()
+            y = np.sum(np.dot(self.Weights, X.T), axis=1).reshape((N, 1))
+            sum = np.zeros((N, N))
+            for i in range(0, len(X)):
+                self.Weights += self.learning_rate * y * (X[i] - y*self.Weights)
+        return self.Weights - np.identity(N)
 
     def reconstruct_sync(self, x):
         x = x.copy()

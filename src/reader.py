@@ -15,7 +15,7 @@ def read_from_file(file):
     X = []
     for line in file:
         row = line.split(sep=',')
-        row = [int(elem) for elem in row]
+        row = [float(elem) for elem in row]
         X.append(row)
 
     return np.array(X)
