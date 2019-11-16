@@ -5,6 +5,10 @@ def disturb_image(image, amount_pixels):
 
     pixels_to_change = []
     image = image.copy()
+
+    if amount_pixels < 1:
+        return image
+
     for px in range(amount_pixels):
         idx = random.randint(0, len(image) - 1)
         while idx in pixels_to_change:
