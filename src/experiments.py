@@ -4,7 +4,7 @@ import src.data_disturber as dis
 from src.Hopfield import HopfieldNetwork, LearningType
 
 repetitions_count = 10
-disturbed_pixels = 5
+disturbed_pixels = 2
 
 network_async_mode = False
 
