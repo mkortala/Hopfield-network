@@ -22,8 +22,8 @@ curr_image_idx = 0
 curr_image = X[curr_image_idx].copy()
 
 print("Creating network...")
-learning_rate = 1.0 / len(curr_image)
-network = HopfieldNetwork(learning_rate, 1000, LearningType.Hebbian, 1e-10)
+learning_rate = 0.1#1.0 / len(curr_image)
+network = HopfieldNetwork(learning_rate, 1000, LearningType.Ojas, 1e-14)
 network.train(X)
 
 #exp.single_test(curr_image, network, n, m)
