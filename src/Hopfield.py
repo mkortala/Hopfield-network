@@ -45,11 +45,16 @@ class HopfieldNetwork:
                 self.__make_diagonal_zero()
         return self.Weights
 
-    def __ojaRule2(self, X, N, M):
-        weights = np.zeros((N, N)) / N
 
-        iter_count = self.max_iter
-        for iter_num in range(iter_count):
+    def __ojaRule2(self, X, N, M):
+        weights = np.zeros((N, N))
+        prev_weights = np.ones((N, N)) / N
+
+        iter_count = self.max_iter * 100
+        iter_num = 0
+        while iter_num < iter_count and np.linalg.norm(weights - prev_weights) > self.epsilon:
+            prev_weights = weights.copy()
+            iter_num += 1
             for vec in X:
                 for i in range(N):
                     for j in range(N):

@@ -7,23 +7,27 @@ import src.experiments as exp
 
 print("Reading data file...")
 
-#path = '../data/letters_abc-8x12.csv'
-#path = '../data/animals-14x9.csv'
+# path = '../data/animals-14x9.csv'
+# path = '../data/large-25x25.csv'
+# path = '../data/large-25x25.plus.csv'
+# path = '../data/large-25x50.csv'
+# path = '../data/letters-14x20.csv'
+# path = '../data/letters_abc-8x12.csv'
+# path = '../data/OCRA-12x30-cut.csv'
 path = '../data/small-7x7.csv'
-#path = '../data/test-3x3.csv'
-#path = '../data/large-25x25.csv'
+# path = '../data/test-3x3.csv'
 
 X, n, m = reader.read_data(path)
 
 print("Displaying file data...")
 pres.print_dataset(X, n, m, path)
 
-curr_image_idx = 0
+curr_image_idx = 2
 curr_image = X[curr_image_idx].copy()
 
 print("Creating network...")
-learning_rate = 0.1#1.0 / len(curr_image)
-network = HopfieldNetwork(learning_rate, 1000, LearningType.Ojas, 1e-14)
+learning_rate = 1.0 / len(curr_image)
+network = HopfieldNetwork(learning_rate, 1000, LearningType.Ojas, 10e-10)
 network.train(X)
 
 #exp.single_test(curr_image, network, n, m)
