@@ -25,7 +25,7 @@ class HopfieldNetwork:
         if self.learningType == LearningType.Hebbian:
             self.Weights = self.__hebbianRule(X, X.shape[1], X.shape[0])
         else:
-            self.Weights = self.__ojaRule2(X, X.shape[1], X.shape[0])
+            self.Weights = self.__ojaRule3(X, X.shape[1], X.shape[0])
 
     def __hebbianRule(self, X, N, M):
         dot = np.dot(X.T, X)
@@ -33,16 +33,17 @@ class HopfieldNetwork:
 
     def __ojaRule(self, X, N, M):
         np.random.seed(30)
-        self.Weights = 1/N * np.outer(X[0], X[0])#np.random.randn(N, N)
+        self.Weights = np.zeros((N,N))
 
-        Weights_prev = np.zeros((N, N))
+        Weights_prev = np.ones((N,N))
         while np.linalg.norm(self.Weights - Weights_prev) > self.epsilon:
             Weights_prev = self.Weights.copy()
-            y = np.sum(np.dot(self.Weights, X.T), axis=1).reshape((N, 1))
-            sum = np.zeros((N, N))
             for i in range(0, len(X)):
+                y = X[i] if i ==0 else np.dot(self.Weights, np.transpose([X[i]]))
+                y = self.activation(y)
                 self.Weights += self.learning_rate * y * (X[i] - y*self.Weights)
-        return self.Weights - np.identity(N)
+                self.__make_diagonal_zero()
+        return self.Weights
 
 
     def __ojaRule2(self, X, N, M):
@@ -105,3 +106,27 @@ class HopfieldNetwork:
 
         print("Network did not converge!")
         return x
+
+    def __make_diagonal_zero(self):
+        for i in range(0, len(self.Weights)):
+            self.Weights[i][i] = 0
+
+    def __ojaRule3(self, X, N, M):
+
+        Weights = np.zeros((N, N))
+        Weights_copy = np.ones((N, N))
+
+        while np.linalg.norm(Weights - Weights_copy) >= self.epsilon:
+            Weights_copy = Weights.copy()
+
+            for k in range(0, len(X)):
+                x = np.transpose([X[k]])
+                y = x if k == 0 else self.activation(np.dot(Weights, x))
+                for i in range(0, N):
+                    for j in range(0, N):
+                        # if i == j:
+                        #     Weights[i][i] = 0
+                        #     continue
+                        Weights[i][j] += self.learning_rate * y[i] * (x[j] - y[i] * Weights[i][j])
+                        Weights[j][i] = Weights[i][j]
+        return Weights
