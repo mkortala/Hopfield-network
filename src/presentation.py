@@ -96,10 +96,12 @@ def print_dataset(X, n, m, plot_title):
         for i in range(0, n * m, m):
             pict.append(p[i : i + m])
 
-        if plot_rows == 1:
+        if int(plot_rows) == 1:
             axs[int(img_num % plot_columns)].imshow(pict)
+            axs[int(img_num % plot_columns)].set_title(str(img_num))
         else:
             axs[int(img_num / plot_columns), int(img_num % plot_columns)].imshow(pict)
+            axs[int(img_num / plot_columns), int(img_num % plot_columns)].set_title(str(img_num))
 
     fig.suptitle(plot_title, fontsize=15)
 
