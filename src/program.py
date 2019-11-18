@@ -7,9 +7,9 @@ import src.dataset_checker as chk
 
 print("Reading data file...")
 
-path = '../data/animals-14x9.csv'
+# path = '../data/animals-14x9.csv'
 # path = '../data/large-25x25.csv'
-# path = '../data/large-25x25.plus.csv'
+path = '../data/large-25x25.plus.csv'
 # path = '../data/large-25x50.csv'
 # path = '../data/letters-14x20.csv'
 # path = '../data/letters_abc-8x12.csv'

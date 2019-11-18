@@ -6,7 +6,7 @@ from src.Hopfield import HopfieldNetwork, LearningType
 repetitions_count = 1
 disturbed_pixels = 0
 
-network_async_mode = True
+network_async_mode = False
 
 def single_test(curr_image, network, n, m):
 
