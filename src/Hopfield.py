@@ -25,7 +25,7 @@ class HopfieldNetwork:
         if self.learningType == LearningType.Hebbian:
             self.Weights = self.__hebbianRule(X, X.shape[1], X.shape[0])
         else:
-            self.Weights = self.__ojaRule3(X, X.shape[1], X.shape[0])
+            self.Weights = self.__ojaRule2(X, X.shape[1], X.shape[0])
 
     def __hebbianRule(self, X, N, M):
         dot = np.dot(X.T, X)
@@ -47,19 +47,19 @@ class HopfieldNetwork:
 
 
     def __ojaRule2(self, X, N, M):
-        weights = np.zeros((N, N))
+        weights = self.__hebbianRule(X, N, M)
+        #weights = np.zeros((N, N))
         prev_weights = np.ones((N, N)) / N
 
-        iter_count = self.max_iter * 100
+        iter_count = self.max_iter
         iter_num = 0
         while iter_num < iter_count and np.linalg.norm(weights - prev_weights) > self.epsilon:
             prev_weights = weights.copy()
             iter_num += 1
             for vec in X:
-                for i in range(N):
-                    for j in range(N):
-                        v = weights[i, j] + vec[j]
-                        weights[i, j] = weights[i, j] + self.learning_rate * v * (vec[i] - v * weights[i][j])
+                for j in range(N):
+                    v = np.sum(weights[:, j]) * vec[j]
+                    weights[:, j] = weights[:, j] + self.learning_rate * v * (vec - v * weights[:, j])
 
         return weights
 
