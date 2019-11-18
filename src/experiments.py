@@ -3,10 +3,10 @@ import src.presentation as pres
 import src.data_disturber as dis
 from src.Hopfield import HopfieldNetwork, LearningType
 
-repetitions_count = 10
-disturbed_pixels = 2
+repetitions_count = 1
+disturbed_pixels = 0
 
-network_async_mode = False
+network_async_mode = True
 
 def single_test(curr_image, network, n, m):
 
@@ -53,7 +53,7 @@ def multiple_tests(images_set, network, n, m):
             if np.array_equal(pred_image, images_set[i]):
                 experiment_results[i][0] += 1
 
-            #pres.print_experiment_result(images_set[i], disturbed_images[i], pred_image, n, m)
+            pres.print_experiment_result(images_set[i], disturbed_images[i], pred_image, n, m)
 
     print("Experiments results:")
     for i in range(0, len(experiment_results)):

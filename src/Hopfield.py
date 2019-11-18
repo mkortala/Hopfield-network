@@ -57,6 +57,7 @@ class HopfieldNetwork:
             prev_weights = weights.copy()
             iter_num += 1
             for vec in X:
+
                 for j in range(N):
                     v = np.sum(weights[:, j]) * vec[j]
                     weights[:, j] = weights[:, j] + self.learning_rate * v * (vec - v * weights[:, j])
@@ -74,13 +75,15 @@ class HopfieldNetwork:
             new_x = np.dot(self.Weights, x)
             new_x = self.activation(new_x)
 
-            # if np.array_equal(new_x, x):
-            #     return new_x
-            #
-            # if any(np.array_equal(v, new_x) for v in self.previous_steps):
-            #     print("Cycle detected!")
-            #     self.previous_steps.append(new_x)
-            #     return new_x
+            if np.array_equal(new_x, x):
+                print(energy)
+                return new_x
+
+            if any(np.array_equal(v, new_x) for v in self.previous_steps):
+                print("Cycle detected!")
+                self.previous_steps.append(new_x)
+                print(energy)
+                return new_x
 
             self.previous_steps.append(new_x)
             x = new_x.copy()

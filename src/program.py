@@ -7,8 +7,8 @@ import src.dataset_checker as chk
 
 print("Reading data file...")
 
-# path = '../data/animals-14x9.csv'
-path = '../data/large-25x25.csv'
+path = '../data/animals-14x9.csv'
+# path = '../data/large-25x25.csv'
 # path = '../data/large-25x25.plus.csv'
 # path = '../data/large-25x50.csv'
 # path = '../data/letters-14x20.csv'
@@ -24,12 +24,12 @@ X, n, m = reader.read_data(path)
 print("Displaying file data...")
 pres.print_dataset(X, n, m, path)
 
-curr_image_idx = 4
+curr_image_idx = 0
 curr_image = X[curr_image_idx].copy()
 
 print("Creating network...")
 learning_rate = 1.0 / len(curr_image)
-network = HopfieldNetwork(learning_rate, 1000, LearningType.Hebbian, 1)
+network = HopfieldNetwork(learning_rate, 1000, LearningType.Ojas, 1e-8)
 network.train(X)
 
 print("Checking network condition...")
