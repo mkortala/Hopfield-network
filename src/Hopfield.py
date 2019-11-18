@@ -33,7 +33,7 @@ class HopfieldNetwork:
 
     def __ojaRule(self, X, N, M):
         np.random.seed(30)
-        self.Weights = np.zeros((N,N))
+        self.Weights = np.zeros((N, N))
 
         Weights_prev = np.ones((N,N))
         while np.linalg.norm(self.Weights - Weights_prev) > self.epsilon:
@@ -67,23 +67,28 @@ class HopfieldNetwork:
 
         x = x.copy()
         self.previous_steps = [x]
-        for i in range(0, self.max_iter):
+        # for i in range(0, self.max_iter):
+        energy_prev = 0
+        energy = self.calculate_energy(x)
+        while np.abs(energy - energy_prev) >= self.epsilon:
             new_x = np.dot(self.Weights, x)
             new_x = self.activation(new_x)
 
-            if np.array_equal(new_x, x):
-                return new_x
-
-            if any(np.array_equal(v, new_x) for v in self.previous_steps):
-                print("Cycle detected!")
-                self.previous_steps.append(new_x)
-                return new_x
+            # if np.array_equal(new_x, x):
+            #     return new_x
+            #
+            # if any(np.array_equal(v, new_x) for v in self.previous_steps):
+            #     print("Cycle detected!")
+            #     self.previous_steps.append(new_x)
+            #     return new_x
 
             self.previous_steps.append(new_x)
-
             x = new_x.copy()
+            energy_prev = energy.copy()
+            energy = self.calculate_energy(x)
 
-        print("Network did not converge!")
+        print(energy)
+        # print("Network did not converge!")
         return x
 
     def reconstruct_async(self, x):
@@ -124,9 +129,17 @@ class HopfieldNetwork:
                 y = x if k == 0 else self.activation(np.dot(Weights, x))
                 for i in range(0, N):
                     for j in range(0, N):
-                        # if i == j:
-                        #     Weights[i][i] = 0
-                        #     continue
+                        if i == j:
+                            Weights[i][i] = 0
+                            continue
                         Weights[i][j] += self.learning_rate * y[i] * (x[j] - y[i] * Weights[i][j])
-                        Weights[j][i] = Weights[i][j]
+                        Weights[j][i] += self.learning_rate * y[i] * (x[j] - y[i] * Weights[j][i])
         return Weights
+
+    def calculate_energy(self, x):
+        n = len(x)
+        sum = 0
+        for i in range(0, n):
+            for j in range(0, n):
+                sum += self.Weights[i][j]*x[i]*x[j]
+        return -1/2 * sum
