@@ -44,4 +44,4 @@ def convert_images(folder_path, set_name):
             output_file.write("\n")
 
 
-convert_images("../img", "../data/buses")
+convert_images("../img_s", "../data/buses_s")
